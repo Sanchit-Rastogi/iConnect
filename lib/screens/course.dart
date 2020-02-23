@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:iconnect/models/course_idMap.dart';
 
 class CoursePage extends StatefulWidget {
   final String courseName;
@@ -18,6 +20,32 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
+  final firestore = Firestore.instance;
+  List<String> courseReviewList = [];
+  bool isReview = true;
+  bool isPost = false;
+
+  void getCourseReviews() async {
+    CourseIdMap idMap = CourseIdMap();
+    String currID = idMap.ids[widget.courseId];
+    final reviews = await firestore
+        .collection('courses')
+        .document(currID)
+        .collection('review')
+        .getDocuments();
+    for (var review in reviews.documents) {
+      courseReviewList.add(review.data['text']);
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCourseReviews();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,32 +146,97 @@ class _CoursePageState extends State<CoursePage> {
               height: 40.0,
             ),
             Container(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
-                color: Colors.white,
+                color: Color(0xFFe4edec),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  FlatButton(
-                    child: Text('Post'),
-                    onPressed: () {},
-                    color: Colors.white,
+                  Container(
+                    height: 35.0,
+                    width: 150.0,
+                    decoration: BoxDecoration(
+                        border: isPost
+                            ? Border.all(color: Colors.black, width: 1)
+                            : null,
+                        color: isPost ? Colors.white : Color(0xFFe4edec),
+                        borderRadius: BorderRadius.circular(10.0)),
+                    child: FlatButton(
+                      child: Text('Post'),
+                      onPressed: () {
+                        setState(() {
+                          isReview = false;
+                          isPost = true;
+                        });
+                      },
+                    ),
                   ),
-                  FlatButton(
-                    child: Text('Reviews'),
-                    onPressed: () {},
-                    color: Colors.white,
-                    highlightColor: Color(0xFFe4edec),
-                  ),
-                  FlatButton(
-                    child: Text('Media'),
-                    onPressed: () {},
-                    color: Colors.white,
+                  Container(
+                    height: 35.0,
+                    width: 150.0,
+                    decoration: BoxDecoration(
+                      border: isReview
+                          ? Border.all(color: Colors.black, width: 1)
+                          : null,
+                      color: isReview ? Colors.white : Color(0xFFe4edec),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: FlatButton(
+                      child: Text('Reviews'),
+                      onPressed: () {
+                        setState(() {
+                          isReview = true;
+                          isPost = false;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.comment),
+                    title: Text(courseReviewList[index]),
+                  );
+                },
+                itemCount: courseReviewList.length,
+              ),
             )
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 4.0,
+        child: Row(
+          children: <Widget>[
+            FlatButton(
+              onPressed: () {},
+              child: Icon(Icons.home),
+            ),
+            FlatButton(
+              onPressed: () {},
+              child: Icon(Icons.search),
+            ),
+            FlatButton(
+              onPressed: () {},
+              child: Icon(Icons.notifications),
+            ),
+            FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
+              onPressed: () {},
+              child: Icon(Icons.perm_identity),
+            ),
           ],
         ),
       ),
