@@ -1,41 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:iconnect/models/course_idMap.dart';
-import 'media_post.dart';
+import 'package:flutter/rendering.dart';
+import 'package:iconnect/models/club_idMap.dart';
 
-class CoursePage extends StatefulWidget {
-  final String courseName;
-  final String courseId;
-  final String courseLab;
-  final num courseCredit;
-  CoursePage({
-    this.courseName,
-    this.courseId,
-    this.courseCredit,
-    this.courseLab,
-  });
+class ClubPage extends StatefulWidget {
+  final String clubDat;
+  final String clubLoc;
+  final String clubName;
+  final String clubId;
+  ClubPage({this.clubDat, this.clubId, this.clubLoc, this.clubName});
 
   @override
-  _CoursePageState createState() => _CoursePageState();
+  _ClubPageState createState() => _ClubPageState();
 }
 
-class _CoursePageState extends State<CoursePage> {
+class _ClubPageState extends State<ClubPage> {
   final firestore = Firestore.instance;
-  List<String> courseReviewList = [];
-  bool isReview = true;
-  bool isPost = false;
+  var indexNum;
+  String newReview;
 
-  void getCourseReviews() async {
-    CourseIdMap idMap = CourseIdMap();
-    String currID = idMap.ids[widget.courseId];
+  List<String> reviewList = [];
+
+  void getInstructorReviews() async {
+    ClubId idMap = ClubId();
+    String currID = idMap.ids[widget.clubId];
     final reviews = await firestore
-        .collection('courses')
+        .collection('clubs')
         .document(currID)
         .collection('review')
         .getDocuments();
     for (var review in reviews.documents) {
-      courseReviewList.add(review.data['text']);
+      reviewList.add(review.data['text']);
     }
     setState(() {});
   }
@@ -44,16 +40,19 @@ class _CoursePageState extends State<CoursePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCourseReviews();
+    getInstructorReviews();
   }
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _controller = TextEditingController();
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: AutoSizeText(
-          widget.courseName,
+          widget.clubName,
           style: TextStyle(color: Colors.black),
           maxLines: 1,
         ),
@@ -81,7 +80,7 @@ class _CoursePageState extends State<CoursePage> {
                     shape: CircleBorder(),
                     child: CircleAvatar(
                       child: Text(
-                        widget.courseId,
+                        widget.clubId,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20.0,
@@ -102,21 +101,21 @@ class _CoursePageState extends State<CoursePage> {
                       FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text(
-                          widget.courseName,
+                          widget.clubName,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
                       Text(
-                        'Lab: ${widget.courseLab}',
+                        'Date and Time : ${widget.clubDat}',
                         style: TextStyle(
                           fontSize: 13.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       Text(
-                        'Credit hours: ${widget.courseCredit}',
+                        'Location : ${widget.clubLoc}',
                         style: TextStyle(
                           fontSize: 13.0,
                           fontWeight: FontWeight.w400,
@@ -128,71 +127,53 @@ class _CoursePageState extends State<CoursePage> {
               ),
             ),
             SizedBox(
-              height: 30.0,
-            ),
-            RaisedButton(
-              child: Text('Follow'),
-              color: Color(0xFF79bda0),
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
-              textColor: Colors.white,
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(18.0),
-                side: BorderSide(
-                  color: Color(0xFF79bda0),
-                ),
-              ),
-            ),
-            SizedBox(
               height: 40.0,
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
+              width: 900,
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 1.0),
-                color: Color(0xFFe4edec),
+                color: Colors.white,
+              ),
+              child: Text(
+                'Reviews',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 20.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Container(
-                    height: 35.0,
-                    width: 150.0,
-                    decoration: BoxDecoration(
-                        border: isPost
-                            ? Border.all(color: Colors.black, width: 1)
-                            : null,
-                        color: isPost ? Colors.white : Color(0xFFe4edec),
-                        borderRadius: BorderRadius.circular(10.0)),
-                    child: FlatButton(
-                      child: Text('Post'),
-                      onPressed: () {
-                        setState(() {
-                          isReview = false;
-                          isPost = true;
-                        });
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: 'Write your review here...',
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (value) {
+                        newReview = value;
                       },
                     ),
                   ),
-                  Container(
-                    height: 35.0,
-                    width: 150.0,
-                    decoration: BoxDecoration(
-                      border: isReview
-                          ? Border.all(color: Colors.black, width: 1)
-                          : null,
-                      color: isReview ? Colors.white : Color(0xFFe4edec),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: FlatButton(
-                      child: Text('Reviews'),
-                      onPressed: () {
-                        setState(() {
-                          isReview = true;
-                          isPost = false;
-                        });
-                      },
-                    ),
+                  FlatButton(
+                    onPressed: () {
+                      setState(() {
+                        reviewList.add(newReview);
+                      });
+                      _controller.clear();
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Icon(Icons.send),
                   ),
                 ],
               ),
@@ -202,10 +183,10 @@ class _CoursePageState extends State<CoursePage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Icon(Icons.comment),
-                    title: Text(courseReviewList[index]),
+                    title: Text(reviewList[index]),
                   );
                 },
-                itemCount: courseReviewList.length,
+                itemCount: reviewList.length,
               ),
             )
           ],
@@ -213,21 +194,7 @@ class _CoursePageState extends State<CoursePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (context) => SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: Container(
-                        height: 500.0,
-                        child: MediaPost(),
-                      ),
-                    ),
-                  ),
-              isScrollControlled: true);
-        },
+        onPressed: null,
         child: Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(

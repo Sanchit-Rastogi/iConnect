@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:iconnect/models/courses.dart';
-import 'course.dart';
+import 'package:iconnect/models/club_model.dart';
+import 'package:iconnect/screens/club_page.dart';
 
-class CourseList extends StatefulWidget {
+class ClubList extends StatefulWidget {
   @override
-  _CourseListState createState() => _CourseListState();
+  _ClubListState createState() => _ClubListState();
 }
 
-class _CourseListState extends State<CourseList> {
+class _ClubListState extends State<ClubList> {
   final firestore = Firestore.instance;
-  List<CoursesModel> coursesList = [];
+  List<ClubModel> clubList = [];
   var indexNum;
 
   void getData() async {
-    final courses = await firestore.collection('courses').getDocuments();
-    for (var course in courses.documents) {
-      coursesList.add(CoursesModel(
-        name: course.data['name'],
-        id: course.data['id'],
-        credit: course.data['credit'],
-        lab: course.data['lab'],
-      ));
+    final clubs = await firestore.collection('clubs').getDocuments();
+    for (var club in clubs.documents) {
+      clubList.add(ClubModel(
+          id: club.data['id'],
+          name: club.data['name'],
+          dat: club.data['Day and Time'],
+          loc: club.data['Location']));
     }
     setState(() {});
   }
@@ -34,11 +33,11 @@ class _CourseListState extends State<CourseList> {
 
   void sendName() async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return CoursePage(
-        courseName: coursesList[indexNum].name,
-        courseId: coursesList[indexNum].id,
-        courseCredit: coursesList[indexNum].credit,
-        courseLab: coursesList[indexNum].lab,
+      return ClubPage(
+        clubDat: clubList[indexNum].dat,
+        clubId: clubList[indexNum].id,
+        clubLoc: clubList[indexNum].loc,
+        clubName: clubList[indexNum].name,
       );
     }));
   }
@@ -59,7 +58,7 @@ class _CourseListState extends State<CourseList> {
         ),
         centerTitle: true,
         title: Text(
-          'Courses',
+          'Clubs',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.black,
@@ -76,40 +75,46 @@ class _CourseListState extends State<CourseList> {
         color: Color(0xFFe4edec),
         child: ListView.builder(
           itemBuilder: (context, index) {
-            return ListTile(
-              contentPadding: EdgeInsets.all(10.0),
-              leading: Material(
-                elevation: 10.0,
-                shape: CircleBorder(),
-                child: CircleAvatar(
-                  child: Text(
-                    coursesList[index].id,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1.0, color: Colors.black),
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.all(10.0),
+                leading: Material(
+                  elevation: 10.0,
+                  shape: CircleBorder(),
+                  child: CircleAvatar(
+                    child: Text(
+                      clubList[index].id,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                    backgroundColor: Colors.white,
+                    radius: 25.0,
                   ),
-                  backgroundColor: Colors.white,
-                  radius: 25.0,
                 ),
-              ),
-              title: Text(
-                coursesList[index].name,
-                style: TextStyle(color: Colors.black),
-              ),
-              trailing: FlatButton(
-                child: Icon(Icons.arrow_forward_ios),
-                onPressed: () {
-                  setState(() {
-                    indexNum = index;
-                  });
-                  sendName();
-                },
+                title: Text(
+                  clubList[index].name,
+                  style: TextStyle(color: Colors.black),
+                ),
+                trailing: FlatButton(
+                  child: Icon(Icons.arrow_forward_ios),
+                  onPressed: () {
+                    setState(() {
+                      indexNum = index;
+                    });
+                    sendName();
+                  },
+                ),
               ),
             );
           },
-          itemCount: coursesList.length,
+          itemCount: clubList.length,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
