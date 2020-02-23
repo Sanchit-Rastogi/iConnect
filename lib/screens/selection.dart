@@ -28,7 +28,9 @@ class SelectionScreen extends StatelessWidget {
               ),
               RaisedButton(
                 child: Text('Major Section'),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/major');
+                },
               ),
             ],
           ),
