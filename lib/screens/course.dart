@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class CoursePage extends StatefulWidget {
   final String courseName;
@@ -22,9 +23,10 @@ class _CoursePageState extends State<CoursePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
+        title: AutoSizeText(
           widget.courseName,
           style: TextStyle(color: Colors.black),
+          maxLines: 1,
         ),
         centerTitle: true,
         leading: FlatButton(
@@ -35,61 +37,66 @@ class _CoursePageState extends State<CoursePage> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        //padding: EdgeInsets.all(20.0),
         color: Color(0xFFe4edec),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Material(
-                  elevation: 10.0,
-                  shape: CircleBorder(),
-                  child: CircleAvatar(
-                    child: Text(
-                      widget.courseId,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w500,
+            Container(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Material(
+                    elevation: 10.0,
+                    shape: CircleBorder(),
+                    child: CircleAvatar(
+                      child: Text(
+                        widget.courseId,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
+                      backgroundColor: Colors.white,
+                      radius: 50.0,
                     ),
-                    backgroundColor: Colors.white,
-                    radius: 50.0,
                   ),
-                ),
-                SizedBox(
-                  width: 20.0,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      widget.courseName,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
+                  SizedBox(
+                    width: 20.0,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          widget.courseName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Lab: ${widget.courseLab}',
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        fontWeight: FontWeight.w400,
+                      Text(
+                        'Lab: ${widget.courseLab}',
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Credit hours: ${widget.courseCredit}',
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        fontWeight: FontWeight.w400,
+                      Text(
+                        'Credit hours: ${widget.courseCredit}',
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               height: 30.0,
@@ -107,6 +114,36 @@ class _CoursePageState extends State<CoursePage> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 40.0,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 1.0),
+                color: Colors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  FlatButton(
+                    child: Text('Post'),
+                    onPressed: () {},
+                    color: Colors.white,
+                  ),
+                  FlatButton(
+                    child: Text('Reviews'),
+                    onPressed: () {},
+                    color: Colors.white,
+                    highlightColor: Color(0xFFe4edec),
+                  ),
+                  FlatButton(
+                    child: Text('Media'),
+                    onPressed: () {},
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

@@ -22,8 +22,8 @@ class _CourseListState extends State<CourseList> {
         credit: course.data['credit'],
         lab: course.data['lab'],
       ));
-      print(course.data);
     }
+    setState(() {});
   }
 
   @override
@@ -73,10 +73,20 @@ class _CourseListState extends State<CourseList> {
           itemBuilder: (context, index) {
             return ListTile(
               contentPadding: EdgeInsets.all(10.0),
-              leading: Text(
-                coursesList[index].id,
-                style: TextStyle(
-                  backgroundColor: Colors.lightBlueAccent,
+              leading: Material(
+                elevation: 10.0,
+                shape: CircleBorder(),
+                child: CircleAvatar(
+                  child: Text(
+                    coursesList[index].id,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  radius: 25.0,
                 ),
               ),
               title: Text(
