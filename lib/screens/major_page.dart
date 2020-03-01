@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
+import 'package:iconnect/widgets/navbar_widget.dart';
 import 'package:iconnect/models/major_IdMap.dart';
 
 class MajorPage extends StatefulWidget {
@@ -62,149 +63,131 @@ class _MajorPageState extends State<MajorPage> {
           },
         ),
       ),
-      body: Container(
-        //padding: EdgeInsets.all(20.0),
-        color: Color(0xFFe4edec),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                //crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 9,
+            child: Container(
+              //padding: EdgeInsets.all(20.0),
+              color: Color(0xFFe4edec),
+              child: Column(
                 children: <Widget>[
-                  Material(
-                    elevation: 10.0,
-                    shape: CircleBorder(),
-                    child: CircleAvatar(
-                      child: Text(
-                        widget.majorId,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w500,
+                  Container(
+                    padding: EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      //crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Material(
+                          elevation: 10.0,
+                          shape: CircleBorder(),
+                          child: CircleAvatar(
+                            child: Text(
+                              widget.majorId,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            backgroundColor: Colors.white,
+                            radius: 50.0,
+                          ),
                         ),
-                      ),
-                      backgroundColor: Colors.white,
-                      radius: 50.0,
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                widget.majorName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
-                    width: 20.0,
+                    height: 40.0,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(
-                          widget.majorName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 40.0,
-            ),
-            Container(
-              width: 900,
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 1.0),
-                color: Colors.white,
-              ),
-              child: Text(
-                'Reviews',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 20.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        hintText: 'Write your review here...',
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (value) {
-                        newReview = value;
-                      },
+                  Container(
+                    width: 900,
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 1.0),
+                      color: Colors.white,
+                    ),
+                    child: Text(
+                      'Reviews',
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        reviewList.add(newReview);
-                      });
-                      _controller.clear();
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Icon(Icons.send),
+                  SizedBox(
+                    height: 20.0,
                   ),
+                  Container(
+                    padding: EdgeInsets.only(left: 20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              hintText: 'Write your review here...',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              newReview = value;
+                            },
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            setState(() {
+                              reviewList.add(newReview);
+                            });
+                            _controller.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: Icon(Icons.send),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(Icons.comment),
+                          title: Text(reviewList[index]),
+                        );
+                      },
+                      itemCount: reviewList.length,
+                    ),
+                  )
                 ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.comment),
-                    title: Text(reviewList[index]),
-                  );
-                },
-                itemCount: reviewList.length,
-              ),
-            )
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 4.0,
-        child: Row(
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.home),
-            ),
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.search),
-            ),
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.notifications),
-            ),
-            FlatButton(
-              padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
-              onPressed: () {},
-              child: Icon(Icons.perm_identity),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 2,
+            child: NavbarWidget(),
+          )
+        ],
       ),
     );
   }

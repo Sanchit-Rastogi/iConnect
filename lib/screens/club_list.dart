@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:iconnect/models/club_model.dart';
 import 'package:iconnect/screens/club_page.dart';
+import 'package:iconnect/widgets/navbar_widget.dart';
 
 class ClubList extends StatefulWidget {
   @override
@@ -73,80 +74,90 @@ class _ClubListState extends State<ClubList> {
       ),
       body: Container(
         color: Color(0xFFe4edec),
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 1.0, color: Colors.black),
-              ),
-              child: ListTile(
-                contentPadding: EdgeInsets.all(10.0),
-                leading: Material(
-                  elevation: 10.0,
-                  shape: CircleBorder(),
-                  child: CircleAvatar(
-                    child: Text(
-                      clubList[index].id,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w500,
+        child: Column(
+          children: <Widget>[
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1.0, color: Colors.black),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.all(10.0),
+                    leading: Material(
+                      elevation: 10.0,
+                      shape: CircleBorder(),
+                      child: CircleAvatar(
+                        child: Text(
+                          clubList[index].id,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        backgroundColor: Colors.white,
+                        radius: 25.0,
                       ),
                     ),
-                    backgroundColor: Colors.white,
-                    radius: 25.0,
+                    title: Text(
+                      clubList[index].name,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    trailing: FlatButton(
+                      child: Icon(Icons.arrow_forward_ios),
+                      onPressed: () {
+                        setState(() {
+                          indexNum = index;
+                        });
+                        sendName();
+                      },
+                    ),
                   ),
-                ),
-                title: Text(
-                  clubList[index].name,
-                  style: TextStyle(color: Colors.black),
-                ),
-                trailing: FlatButton(
-                  child: Icon(Icons.arrow_forward_ios),
-                  onPressed: () {
-                    setState(() {
-                      indexNum = index;
-                    });
-                    sendName();
-                  },
-                ),
-              ),
-            );
-          },
-          itemCount: clubList.length,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 4.0,
-        child: Row(
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.home),
+                );
+              },
+              itemCount: clubList.length,
             ),
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.search),
-            ),
-            FlatButton(
-              onPressed: () {},
-              child: Icon(Icons.notifications),
-            ),
-            FlatButton(
-              padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
-              onPressed: () {},
-              child: Icon(Icons.perm_identity),
+            Expanded(
+              child: NavbarWidget(),
             ),
           ],
         ),
       ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+//      floatingActionButton: FloatingActionButton(
+//        onPressed: null,
+//        child: Icon(Icons.add),
+//      ),
+//      bottomNavigationBar: BottomAppBar(
+//        shape: CircularNotchedRectangle(),
+//        notchMargin: 4.0,
+//        child: Row(
+//          children: <Widget>[
+//            FlatButton(
+//              onPressed: () {},
+//              child: Icon(Icons.home),
+//            ),
+//            FlatButton(
+//              onPressed: () {},
+//              child: Icon(Icons.search),
+//            ),
+//            FlatButton(
+//              onPressed: () {},
+//              child: Icon(Icons.notifications),
+//            ),
+//            FlatButton(
+//              padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 10.0),
+//              onPressed: () {},
+//              child: Icon(Icons.perm_identity),
+//            ),
+//          ],
+//        ),
+//      ),
     );
   }
 }
