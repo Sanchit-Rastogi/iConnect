@@ -28,6 +28,7 @@ class _CoursePageState extends State<CoursePage> {
   List<String> courseReviewList = [];
   bool isReview = true;
   bool isPost = false;
+  List<String> coursePostList = [];
 
   void getCourseReviews() async {
     CourseIdMap idMap = CourseIdMap();
@@ -43,11 +44,26 @@ class _CoursePageState extends State<CoursePage> {
     setState(() {});
   }
 
+  void getCoursePost() async {
+    CourseIdMap idMap = CourseIdMap();
+    String currID = idMap.ids[widget.courseId];
+    final posts = await firestore
+        .collection('courses')
+        .document(currID)
+        .collection('coursePosts')
+        .getDocuments();
+    for (var post in posts.documents) {
+      coursePostList.add(post.data['text']);
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCourseReviews();
+    getCoursePost();
   }
 
   @override
@@ -210,7 +226,9 @@ class _CoursePageState extends State<CoursePage> {
                         ? CourseReview(
                             reviewList: courseReviewList,
                           )
-                        : CoursePost(),
+                        : CoursePost(
+                            postList: coursePostList,
+                          ),
                   )
                 ],
               ),

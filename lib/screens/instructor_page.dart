@@ -26,12 +26,13 @@ class _InstructorPageState extends State<InstructorPage> {
   List<String> instructorReviewList = [];
   var indexNum;
   String newReview;
+  String currID;
 
   List<String> reviewList = [];
 
   void getInstructorReviews() async {
     InstructorIdMap idMap = InstructorIdMap();
-    String currID = idMap.ids[widget.instructorId];
+    currID = idMap.ids[widget.instructorId];
     final reviews = await firestore
         .collection('instructors')
         .document(currID)
@@ -179,6 +180,11 @@ class _InstructorPageState extends State<InstructorPage> {
                         ),
                         FlatButton(
                           onPressed: () {
+                            firestore
+                                .collection('instructors')
+                                .document(currID)
+                                .collection('review')
+                                .add({'text': newReview});
                             setState(() {
                               reviewList.add(newReview);
                             });

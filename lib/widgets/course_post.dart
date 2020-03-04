@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CoursePost extends StatelessWidget {
-  final List<String> postList = [];
-
-  void addPost(String value) {
-    postList.add(value);
-  }
+  final List<String> postList;
+  CoursePost({this.postList});
 
   @override
   Widget build(BuildContext context) {

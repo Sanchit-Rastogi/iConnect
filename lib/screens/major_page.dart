@@ -18,12 +18,13 @@ class _MajorPageState extends State<MajorPage> {
   final firestore = Firestore.instance;
   var indexNum;
   String newReview;
+  String currID;
 
   List<String> reviewList = [];
 
   void getInstructorReviews() async {
     MajorIdMap idMap = MajorIdMap();
-    String currID = idMap.ids[widget.majorId];
+    currID = idMap.ids[widget.majorId];
     final reviews = await firestore
         .collection('majors')
         .document(currID)
@@ -157,6 +158,11 @@ class _MajorPageState extends State<MajorPage> {
                         ),
                         FlatButton(
                           onPressed: () {
+                            firestore
+                                .collection('majors')
+                                .document(currID)
+                                .collection('review')
+                                .add({'text': newReview});
                             setState(() {
                               reviewList.add(newReview);
                             });

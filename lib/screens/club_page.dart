@@ -20,12 +20,13 @@ class _ClubPageState extends State<ClubPage> {
   final firestore = Firestore.instance;
   var indexNum;
   String newReview;
+  String currID;
 
   List<String> reviewList = [];
 
   void getInstructorReviews() async {
     ClubId idMap = ClubId();
-    String currID = idMap.ids[widget.clubId];
+    currID = idMap.ids[widget.clubId];
     final reviews = await firestore
         .collection('clubs')
         .document(currID)
@@ -173,6 +174,11 @@ class _ClubPageState extends State<ClubPage> {
                         ),
                         FlatButton(
                           onPressed: () {
+                            firestore
+                                .collection('clubs')
+                                .document(currID)
+                                .collection('review')
+                                .add({'text': newReview});
                             setState(() {
                               reviewList.add(newReview);
                             });

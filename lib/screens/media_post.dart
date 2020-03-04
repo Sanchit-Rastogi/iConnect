@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iconnect/widgets/course_post.dart';
+//import 'package:iconnect/widgets/course_post.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:iconnect/widgets/uploader.dart';
 
 class MediaPost extends StatefulWidget {
   @override
@@ -8,7 +11,17 @@ class MediaPost extends StatefulWidget {
 
 class _MediaPostState extends State<MediaPost> {
   String inputText;
-  CoursePost addNewPost = CoursePost();
+  //CoursePost addNewPost = CoursePost();
+
+  File _imageFile;
+  bool show = false;
+
+  Future<void> _pickImage(ImageSource source) async {
+    File selected = await ImagePicker.pickImage(source: source);
+    setState(() {
+      _imageFile = selected;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,7 @@ class _MediaPostState extends State<MediaPost> {
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () => _pickImage(ImageSource.gallery),
                   child: Text(
                     'Image',
                     style: TextStyle(
@@ -76,8 +89,7 @@ class _MediaPostState extends State<MediaPost> {
             color: Color(0xFF79bda0),
             onPressed: () {
               setState(() {
-                addNewPost.addPost(inputText);
-                Navigator.pop(context);
+                show = !show;
               });
             },
             child: Text(
@@ -86,7 +98,12 @@ class _MediaPostState extends State<MediaPost> {
                 color: Colors.white,
               ),
             ),
-          )
+          ),
+          show
+              ? Uploader(
+                  file: _imageFile,
+                )
+              : Text(''),
         ],
       ),
     );
