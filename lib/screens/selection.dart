@@ -32,6 +32,12 @@ class SelectionScreen extends StatelessWidget {
                   Navigator.of(context).pushNamed('/major');
                 },
               ),
+              RaisedButton(
+                child: Text('Ads Screen'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/ads');
+                },
+              )
             ],
           ),
         ),

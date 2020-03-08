@@ -4,6 +4,7 @@ import 'screens/instructor_list.dart';
 import 'screens/coures_list.dart';
 import 'screens/club_list.dart';
 import 'screens/major_list.dart';
+import 'screens/ads_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         '/course': (BuildContext context) => new CourseList(),
         '/clubs': (BuildContext context) => new ClubList(),
         '/major': (BuildContext context) => new MajorList(),
+        '/ads': (BuildContext context) => new RequestAdPage(),
       },
     );
   }

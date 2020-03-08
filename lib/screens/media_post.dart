@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
-//import 'package:iconnect/widgets/course_post.dart';
+import 'package:iconnect/screens/course.dart';
+import 'course.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:iconnect/widgets/uploader.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class MediaPost extends StatefulWidget {
+  List<String> posts;
+  MediaPost({this.posts});
+
   @override
   _MediaPostState createState() => _MediaPostState();
 }
 
 class _MediaPostState extends State<MediaPost> {
   String inputText;
-  //CoursePost addNewPost = CoursePost();
-
   File _imageFile;
-  bool show = false;
+
+  CoursePage coursePage = CoursePage();
 
   Future<void> _pickImage(ImageSource source) async {
     File selected = await ImagePicker.pickImage(source: source);
     setState(() {
       _imageFile = selected;
     });
+  }
+
+  void saveImage(File image) async {
+    String filePath = '${DateTime.now()}.png';
+    StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
+    StorageUploadTask uploadTask = ref.putFile(image);
+    print(await (await uploadTask.onComplete).ref.getDownloadURL());
   }
 
   @override
@@ -88,9 +98,11 @@ class _MediaPostState extends State<MediaPost> {
           RaisedButton(
             color: Color(0xFF79bda0),
             onPressed: () {
+              saveImage(_imageFile);
               setState(() {
-                show = !show;
+                widget.posts.add(inputText);
               });
+              Navigator.pop(context);
             },
             child: Text(
               'Sumbit',
@@ -99,11 +111,6 @@ class _MediaPostState extends State<MediaPost> {
               ),
             ),
           ),
-          show
-              ? Uploader(
-                  file: _imageFile,
-                )
-              : Text(''),
         ],
       ),
     );

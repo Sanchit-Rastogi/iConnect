@@ -58,6 +58,28 @@ class _CoursePageState extends State<CoursePage> {
     setState(() {});
   }
 
+  Future<void> addFollow() async {
+    //firebaseAuth current login user
+    //Add collection for each user of followed courses.
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('You have subscribes ${widget.courseName}'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -159,7 +181,9 @@ class _CoursePageState extends State<CoursePage> {
                     padding:
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 50.0),
                     textColor: Colors.white,
-                    onPressed: () {},
+                    onPressed: () {
+                      addFollow();
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(18.0),
                       side: BorderSide(
@@ -245,7 +269,9 @@ class _CoursePageState extends State<CoursePage> {
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Container(
                       height: 500.0,
-                      child: MediaPost(),
+                      child: MediaPost(
+                        posts: coursePostList,
+                      ),
                     ),
                   ),
                 ),
