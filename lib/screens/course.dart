@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,8 +66,8 @@ class _CoursePageState extends State<CoursePage> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('You have subscribes ${widget.courseName}'),
+        return CupertinoAlertDialog(
+          title: Text('You are following ${widget.courseName}'),
           actions: <Widget>[
             FlatButton(
               child: Text('OK'),
@@ -195,10 +196,11 @@ class _CoursePageState extends State<CoursePage> {
                     height: 40.0,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 0),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.0),
-                      color: Color(0xFFe4edec),
+                      //border: Border.all(color: Colors.black, width: 1.0),
+                      color: Color(0xFF79bda0),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -207,13 +209,23 @@ class _CoursePageState extends State<CoursePage> {
                           height: 35.0,
                           width: 150.0,
                           decoration: BoxDecoration(
-                              border: isPost
-                                  ? Border.all(color: Colors.black, width: 1)
-                                  : null,
-                              color: isPost ? Colors.white : Color(0xFFe4edec),
-                              borderRadius: BorderRadius.circular(10.0)),
+                            boxShadow: isPost
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 5.0,
+                                    ),
+                                  ]
+                                : null,
+                            color:
+                                !isPost ? Color(0xFF79bda0) : Color(0xFFe4edec),
+                            borderRadius:
+                                isPost ? BorderRadius.circular(5.0) : null,
+                          ),
                           child: FlatButton(
-                            child: Text('Post'),
+                            child: Text(
+                              'Post',
+                            ),
                             onPressed: () {
                               setState(() {
                                 isReview = false;
@@ -226,11 +238,19 @@ class _CoursePageState extends State<CoursePage> {
                           height: 35.0,
                           width: 150.0,
                           decoration: BoxDecoration(
-                            border: isReview
-                                ? Border.all(color: Colors.black, width: 1)
+                            color: !isReview
+                                ? Color(0xFF79bda0)
+                                : Color(0xFFe4edec),
+                            borderRadius:
+                                isReview ? BorderRadius.circular(5.0) : null,
+                            boxShadow: isReview
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 5.0,
+                                    ),
+                                  ]
                                 : null,
-                            color: isReview ? Colors.white : Color(0xFFe4edec),
-                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: FlatButton(
                             child: Text('Reviews'),

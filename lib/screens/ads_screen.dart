@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -14,7 +15,7 @@ class RequestAdPage extends StatefulWidget {
 class _RequestAdPageState extends State<RequestAdPage> {
   final _formKey = GlobalKey<FormState>();
   String dropdownValue = 'One Week';
-  String categoryValue = 'Event';
+  String categoryValue = 'Fashion';
   String businessName;
   String description;
   DateTime selectedDate;
@@ -208,13 +209,19 @@ class _RequestAdPageState extends State<RequestAdPage> {
       }).toList(),
     );
 
-    Future<bool> handleError() {
+    Future<bool> handleError(String outputText) {
       return showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
+              return CupertinoAlertDialog(
                 title: Text('Error'),
-                content: Text('Please fill the complete form'),
+                content: Container(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+                  child: Text(
+                    outputText,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
                 actions: <Widget>[
                   FlatButton(
                     child: Text('OK'),
@@ -246,8 +253,12 @@ class _RequestAdPageState extends State<RequestAdPage> {
           shadowColor: Colors.white70,
           child: MaterialButton(
             onPressed: () {
-              if (description == null || businessName == null) {
-                handleError();
+              if (businessName == null) {
+                handleError('Business name can not be empty!');
+              } else if (description == null) {
+                handleError('Description can not be empty');
+              } else if (selectedDate == null) {
+                handleError('Please select a date');
               } else {
                 uploadData();
                 Navigator.pop(context);
@@ -314,6 +325,12 @@ class _RequestAdPageState extends State<RequestAdPage> {
         ),
       ),
       keyboardType: TextInputType.text,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please fill the business name';
+        }
+        return null;
+      },
       style: TextStyle(color: Colors.black),
       cursorColor: Colors.black,
       onChanged: (newValue) {
@@ -338,6 +355,12 @@ class _RequestAdPageState extends State<RequestAdPage> {
           borderSide: BorderSide(color: Colors.orange),
         ),
       ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please fill the description';
+        }
+        return null;
+      },
       keyboardType: TextInputType.text,
       style: TextStyle(color: Colors.black),
       cursorColor: Colors.black,
