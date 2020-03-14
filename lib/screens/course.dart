@@ -200,7 +200,7 @@ class _CoursePageState extends State<CoursePage> {
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 0),
                     decoration: BoxDecoration(
                       //border: Border.all(color: Colors.black, width: 1.0),
-                      color: Color(0xFF79bda0),
+                      color: Color(0xffCBD2D4),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -218,7 +218,7 @@ class _CoursePageState extends State<CoursePage> {
                                   ]
                                 : null,
                             color:
-                                !isPost ? Color(0xFF79bda0) : Color(0xFFe4edec),
+                                !isPost ? Color(0xffCBD2D4) : Color(0xFFe4edec),
                             borderRadius:
                                 isPost ? BorderRadius.circular(5.0) : null,
                           ),
@@ -239,7 +239,7 @@ class _CoursePageState extends State<CoursePage> {
                           width: 150.0,
                           decoration: BoxDecoration(
                             color: !isReview
-                                ? Color(0xFF79bda0)
+                                ? Color(0xffCBD2D4)
                                 : Color(0xFFe4edec),
                             borderRadius:
                                 isReview ? BorderRadius.circular(5.0) : null,

@@ -139,7 +139,8 @@ class _RequestAdPageState extends State<RequestAdPage> {
               height: 60.0,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Colors.green[200],
+                color: Color(0xFF87B9A0),
+                borderRadius: BorderRadius.circular(7),
               ),
               child: FlatButton(
                 child: Row(
@@ -248,7 +249,7 @@ class _RequestAdPageState extends State<RequestAdPage> {
         ),
         child: Material(
           borderRadius: BorderRadius.circular(7.0),
-          color: Colors.green[200],
+          color: Color(0xFF87B9A0),
           elevation: 10.0,
           shadowColor: Colors.white70,
           child: MaterialButton(
