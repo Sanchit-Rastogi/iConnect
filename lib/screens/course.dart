@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:iconnect/models/course_idMap.dart';
 import 'media_post.dart';
 import 'package:iconnect/widgets/course_review.dart';
@@ -30,13 +31,14 @@ class _CoursePageState extends State<CoursePage> {
   bool isReview = true;
   bool isPost = false;
   List<String> coursePostList = [];
+  String currReviewsID;
 
   void getCourseReviews() async {
     CourseIdMap idMap = CourseIdMap();
-    String currID = idMap.ids[widget.courseId];
+    currReviewsID = idMap.ids[widget.courseId];
     final reviews = await firestore
         .collection('courses')
-        .document(currID)
+        .document(currReviewsID)
         .collection('review')
         .getDocuments();
     for (var review in reviews.documents) {
@@ -92,6 +94,7 @@ class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: AutoSizeText(
@@ -269,6 +272,7 @@ class _CoursePageState extends State<CoursePage> {
                     child: isReview
                         ? CourseReview(
                             reviewList: courseReviewList,
+                            currID: currReviewsID,
                           )
                         : CoursePost(
                             postList: coursePostList,
