@@ -11,7 +11,7 @@ class CoursePost extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           leading: Icon(Icons.comment),
-          title: Text(postList[index]),
+          title: Text(postList[index] ?? " "),
         );
       },
       itemCount: postList.length,
