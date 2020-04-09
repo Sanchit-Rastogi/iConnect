@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:iconnect/models/course_idMap.dart';
 import 'media_post.dart';
 import 'package:iconnect/widgets/course_review.dart';
-import 'package:iconnect/widgets/course_post.dart';
 import 'package:iconnect/widgets/navbar_widget.dart';
 
 class CoursePage extends StatefulWidget {
@@ -30,7 +28,7 @@ class _CoursePageState extends State<CoursePage> {
   List<String> courseReviewList = [];
   bool isReview = true;
   bool isPost = false;
-  List<String> coursePostList = [];
+  List<CoursePostModel> coursePostModelList = [];
   String currReviewsID;
 
   void getCourseReviews() async {
@@ -56,7 +54,10 @@ class _CoursePageState extends State<CoursePage> {
         .collection('coursePosts')
         .getDocuments();
     for (var post in posts.documents) {
-      coursePostList.add(post.data['text']);
+      coursePostModelList.add(CoursePostModel(
+        text: post.data['text'] ?? "",
+        imgUrl: post.data['attach'] ?? "",
+      ));
     }
     setState(() {});
   }
@@ -231,9 +232,11 @@ class _CoursePageState extends State<CoursePage> {
                             ),
                             onPressed: () {
                               setState(() {
+                                coursePostModelList.clear();
                                 isReview = false;
                                 isPost = true;
                               });
+                              getCoursePost();
                             },
                           ),
                         ),
@@ -274,10 +277,45 @@ class _CoursePageState extends State<CoursePage> {
                             reviewList: courseReviewList,
                             currID: currReviewsID,
                           )
-                        : CoursePost(
-                            postList: coursePostList,
+                        : Container(
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(Icons.comment),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text(coursePostModelList[index]
+                                                    .text ??
+                                                " "),
+                                          ],
+                                        ),
+                                        Image(
+                                              height: 300,
+                                              width: 300,
+                                              image: NetworkImage(
+                                                  coursePostModelList[index]
+                                                      .imgUrl),
+                                            ) ??
+                                            Text(""),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemCount: coursePostModelList.length,
+                            ),
                           ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -294,7 +332,7 @@ class _CoursePageState extends State<CoursePage> {
                     child: Container(
                       height: 500.0,
                       child: MediaPost(
-                        posts: coursePostList,
+                        id: currReviewsID,
                       ),
                     ),
                   ),
@@ -307,4 +345,14 @@ class _CoursePageState extends State<CoursePage> {
       ),
     );
   }
+}
+
+class CoursePostModel {
+  String text;
+  String imgUrl;
+
+  CoursePostModel({
+    this.text,
+    this.imgUrl,
+  });
 }

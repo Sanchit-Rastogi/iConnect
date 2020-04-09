@@ -4,10 +4,11 @@ import 'course.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MediaPost extends StatefulWidget {
-  List<String> posts;
-  MediaPost({this.posts});
+  String id;
+  MediaPost({this.id});
 
   @override
   _MediaPostState createState() => _MediaPostState();
@@ -16,6 +17,8 @@ class MediaPost extends StatefulWidget {
 class _MediaPostState extends State<MediaPost> {
   String inputText;
   File _imageFile;
+  String imgUrl;
+  final Firestore _firestore = Firestore.instance;
 
   CoursePage coursePage = CoursePage();
 
@@ -26,11 +29,20 @@ class _MediaPostState extends State<MediaPost> {
     });
   }
 
-  void saveImage(File image) async {
+  Future<void> saveImage(File image) async {
     String filePath = '${DateTime.now()}.png';
     StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
     StorageUploadTask uploadTask = ref.putFile(image);
-    print(await (await uploadTask.onComplete).ref.getDownloadURL());
+    imgUrl = (await (await uploadTask.onComplete).ref.getDownloadURL());
+    savePostReview();
+  }
+
+  Future<void> savePostReview() async {
+    await _firestore
+        .collection("courses")
+        .document(widget.id)
+        .collection('coursePosts')
+        .add({'text': inputText ?? " ", 'attach': imgUrl ?? " "});
   }
 
   @override
@@ -99,9 +111,6 @@ class _MediaPostState extends State<MediaPost> {
             color: Color(0xFF79bda0),
             onPressed: () {
               saveImage(_imageFile);
-              setState(() {
-                widget.posts.add(inputText);
-              });
               Navigator.pop(context);
             },
             child: Text(
