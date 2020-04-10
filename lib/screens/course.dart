@@ -299,14 +299,18 @@ class _CoursePageState extends State<CoursePage> {
                                                 " "),
                                           ],
                                         ),
-                                        Image(
-                                              height: 300,
-                                              width: 300,
-                                              image: NetworkImage(
-                                                  coursePostModelList[index]
-                                                      .imgUrl),
-                                            ) ??
-                                            Text(""),
+                                        coursePostModelList[index]
+                                                    .imgUrl
+                                                    .length >
+                                                10
+                                            ? Image(
+                                                height: 300,
+                                                width: 300,
+                                                image: NetworkImage(
+                                                    coursePostModelList[index]
+                                                        .imgUrl),
+                                              )
+                                            : Container(),
                                       ],
                                     ),
                                   ),

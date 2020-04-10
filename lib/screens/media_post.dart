@@ -30,10 +30,14 @@ class _MediaPostState extends State<MediaPost> {
   }
 
   Future<void> saveImage(File image) async {
-    String filePath = '${DateTime.now()}.png';
-    StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
-    StorageUploadTask uploadTask = ref.putFile(image);
-    imgUrl = (await (await uploadTask.onComplete).ref.getDownloadURL());
+    if (_imageFile != null) {
+      String filePath = '${DateTime.now()}.png';
+      StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
+      StorageUploadTask uploadTask = ref.putFile(image);
+      imgUrl = (await (await uploadTask.onComplete).ref.getDownloadURL());
+    } else {
+      imgUrl = ' ';
+    }
     savePostReview();
   }
 
@@ -42,7 +46,7 @@ class _MediaPostState extends State<MediaPost> {
         .collection("courses")
         .document(widget.id)
         .collection('coursePosts')
-        .add({'text': inputText ?? " ", 'attach': imgUrl ?? " "});
+        .add({'text': inputText ?? " ", 'attach': imgUrl});
   }
 
   @override
